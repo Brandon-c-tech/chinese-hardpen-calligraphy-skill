@@ -43,6 +43,7 @@ python3 scripts/make_comparison_panel.py user.png --exemplar exemplar.png --out 
 python3 scripts/annotate_image.py out/overlay.png --annotations annotations.json --out out/annotated-overlay.png
 python3 scripts/make_size_consistency_overlay.py glyphs/*.png --out out/size-overlay.png --metrics out/size-metrics.json
 python3 scripts/segment_blank_glyphs.py blank-page.jpg --out out/blank-glyphs --prefer-blue --debug out/blank-segmentation-debug.png
+python3 scripts/compare_stroke_segments.py stroke-manifest.json --out out/stroke-comparison.png --metrics out/stroke-metrics.json
 ```
 
 Dependencies:
@@ -78,3 +79,11 @@ Substantive outputs should include both:
 
 - Markdown for archival storage.
 - HTML for visual review.
+
+## Stroke Cohort Comparison
+
+When the same stroke position recurs across a batch, compare it visually and
+quantitatively. Examples: the top horizontal in repeated `下`, the center
+vertical in `市`, or the final sweep in `之`. Use annotated crop panels plus
+length, angle, and start/end-position metrics so the user can see patterns such
+as "my horizontals are consistently too steep" or "my verticals drift left."

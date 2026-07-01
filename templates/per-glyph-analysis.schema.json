@@ -91,6 +91,43 @@
       "items": {
         "type": "string"
       }
+    },
+    "stroke_segments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["stroke_name", "points"],
+        "properties": {
+          "stroke_name": {
+            "type": "string"
+          },
+          "stroke_type": {
+            "type": "string",
+            "enum": ["horizontal", "vertical", "left_falling", "right_falling", "dot", "hook", "turn", "curve", "other"]
+          },
+          "points": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "length_px": {
+            "type": "number"
+          },
+          "angle_degrees": {
+            "type": "number"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
     }
   }
 }

@@ -26,6 +26,8 @@ Size metrics:
 
 Blank-paper glyph contact sheet:
 
+Stroke cohort panels:
+
 ## What Is Already Working
 
 1.
@@ -101,6 +103,12 @@ What to fix first:
 | Issue Type | Glyphs / Crop IDs | Evidence | Correction |
 | --- | --- | --- | --- |
 |  |  |  |  |
+
+## Stroke Cohort Analysis
+
+| Stroke Cohort | Glyphs / Crop IDs | Length Pattern | Angle Pattern | Position Pattern | Visual Evidence | Drill |
+| --- | --- | --- | --- | --- | --- | --- |
+|  |  |  |  |  |  |  |
 
 ## Strong Samples
 

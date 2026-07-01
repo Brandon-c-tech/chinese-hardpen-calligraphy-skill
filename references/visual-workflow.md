@@ -78,6 +78,24 @@ or for an explicit layout-analysis request.
 The visual report should include the blank-paper glyph contact sheet, not just a
 whole-page screenshot.
 
+## Stroke Cohort Visuals
+
+When analyzing a repeated stroke, create a cohort view:
+
+- Each crop shows the same visible stroke highlighted.
+- A metric table reports length, normalized length, angle, and start/end position.
+- A summary chart or panel shows spread and outliers.
+
+Good candidates:
+
+- Repeated `下`: top horizontal angle and length; center vertical placement.
+- Repeated `之`: final sweep length and angle.
+- Repeated `市`: center vertical alignment and lower-frame verticals.
+- Repeated `心`: dot positions and main curved stroke width.
+
+Use these visuals to explain habitual stroke tendencies, not to infer stroke
+order.
+
 ## Overlay Comparison
 
 For exemplar/user comparison:

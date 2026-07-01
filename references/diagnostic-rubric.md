@@ -61,6 +61,16 @@ Check visible pen control:
 Do not claim actual pressure or stroke order unless there is direct evidence.
 Use phrases such as "visually appears" or "the final trace suggests."
 
+When the same visible stroke appears repeatedly, use cohort comparison:
+
+- Length: absolute and normalized by cell/glyph size.
+- Angle: degrees relative to the baseline.
+- Start/end location: relative position inside the cell or virtual cell.
+- Spread: range, standard deviation, coefficient of variation.
+
+This helps distinguish a one-off miss from a habit, such as consistently steep
+horizontals or center verticals that start too far left.
+
 ### Exemplar Deviation
 
 When an exemplar exists, compare:
@@ -154,3 +164,15 @@ After all glyphs are classified, create:
 
 This helps the user see patterns across multiple characters instead of feeling
 that the critique depends on one cherry-picked example.
+
+## Stroke Cohort Analysis
+
+Use stroke cohort analysis for repeated visible strokes:
+
+- Same character repeated many times.
+- Same component repeated across several characters.
+- Same stroke family causing a recurring issue.
+
+The output should include annotated crop examples and a metric summary. Do not
+present a metric without a visual explanation, and do not present a visual claim
+without saying how broad the pattern is across the cohort.

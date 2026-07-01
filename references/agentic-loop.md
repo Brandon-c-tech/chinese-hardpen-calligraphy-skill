@@ -91,6 +91,15 @@ Create two batch summaries:
 Also create issue-category summaries. A glyph can belong to multiple categories,
 for example "center drift" and "over-extended final stroke."
 
+Create stroke cohort comparisons when useful:
+
+- Pick one visible stroke position shared across several glyphs.
+- Mark the same stroke in each crop.
+- Compare length, angle, and start/end position.
+- Show the annotated crop cohort and metrics.
+- Use this to explain recurring issues such as steep horizontals, leaning
+  verticals, short main strokes, or over-extended sweeps.
+
 For isolated blank-paper repeated characters, first aggregate size consistency:
 
 - Segment every visible glyph before analysis.
@@ -114,6 +123,13 @@ For each issue, provide a drill:
 - What visual checkpoint to use.
 - Which characters from the current page should be retried.
 
+If a stroke cohort analysis found a stable pattern, turn it into a drill:
+
+- Example: "all top horizontals are 6-10 degrees too steep" becomes a horizontal
+  angle drill.
+- Example: "center vertical starts too far left" becomes a center-axis placement
+  drill.
+
 ## Pass 7: Visual Explanation Check
 
 Before finalizing, ask:
@@ -121,6 +137,7 @@ Before finalizing, ask:
 - Did I critique every user-written glyph?
 - Did I classify every glyph by quality and issue type?
 - Did I show best-batch and worst/priority-batch examples, not only one good and one bad glyph?
+- Did I include stroke cohort evidence when a stroke-level pattern was visible?
 - Does every major claim have a visible example?
 - Did I show at least one good region and one weak region?
 - Did I use overlay or guide marks when the problem is spatial?

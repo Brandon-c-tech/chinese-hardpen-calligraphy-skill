@@ -31,9 +31,10 @@ Do not rely on one-shot multimodal judgement of a full page. Use an agentic loop
 5. Verify segmentation visually before judging.
 6. Score and explain every user-written glyph, not only representative samples.
 7. Classify every glyph by quality and issue type.
-8. Aggregate recurring issues across characters, radicals, structures, and layout.
-9. Produce archival Markdown and visual HTML reports with evidence.
-10. Produce a concise next-practice prescription.
+8. Compare repeated visible strokes across a cohort when stroke issues recur.
+9. Aggregate recurring issues across characters, radicals, structures, and layout.
+10. Produce archival Markdown and visual HTML reports with evidence.
+11. Produce a concise next-practice prescription.
 
 ## When Starting
 
@@ -116,7 +117,26 @@ Use this loop for substantive diagnosis:
    - Typical errors: one character can appear in multiple error categories if it
      has multiple problems.
 
-7. Practice prescription
+7. Stroke cohort analysis
+   When several glyphs share the same visible stroke position, compare that
+   stroke across the cohort:
+   - Same character, same stroke position, such as `下` top horizontal.
+   - Same component position, such as center vertical in `市`.
+   - Same stroke type across related characters, such as long horizontal,
+     vertical support, left-falling, right-falling, dot, hook, or turn.
+
+   Measure and visualize:
+   - Stroke length, preferably normalized by cell or glyph size.
+   - Stroke angle relative to the writing baseline.
+   - Start and end position inside the cell or virtual cell.
+   - Spread across attempts: range, standard deviation, coefficient of variation.
+   - Outliers: strokes that are much too long, too short, too flat, too steep,
+     or misplaced.
+
+   This is a comparison of visible final stroke traces, not a claim about
+   actual stroke order.
+
+8. Practice prescription
    Give no more than three primary correction themes.
    For each theme, include:
    - Evidence characters.
@@ -124,7 +144,7 @@ Use this loop for substantive diagnosis:
    - A concrete drill.
    - What the next upload should be checked for.
 
-8. Visual explanation
+9. Visual explanation
    - The diagnosis must not be text-only when image inputs are available.
    - Provide annotated image evidence for at least the strongest sample and the
      highest-priority correction sample.
@@ -151,6 +171,9 @@ This skill includes lightweight scripts that work with Pillow and NumPy:
   resizing, draw a low-opacity overlay, and write size-consistency metrics.
 - `scripts/segment_blank_glyphs.py`: split blank-paper handwriting into
   individual glyph crops using ink detection and connected components.
+- `scripts/compare_stroke_segments.py`: compare a named stroke across multiple
+  glyphs using manually or visually identified stroke segments, then output
+  angle/length metrics and an annotated comparison panel.
 
 Prefer these scripts for evidence creation. Visual-model judgement should explain
 the evidence; it should not replace the evidence.
@@ -178,6 +201,7 @@ include:
 - Classification of every glyph by quality and issue type.
 - Best batch and worst/priority batch analysis.
 - Typical strengths and typical errors, with multiple examples.
+- Stroke cohort comparisons when repeated stroke-level issues are visible.
 - Recurring issues across characters.
 - Next practice plan.
 

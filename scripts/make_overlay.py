@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Create an exemplar/user glyph overlay for handwriting comparison.
 
-The script uses only Pillow and NumPy. It thresholds each image, crops the ink
-bounding box, fits both masks into the same square canvas, and writes a PNG where
-the exemplar is blue, the user glyph is red, and overlap appears dark.
+The script uses only Pillow and NumPy. It thresholds each image, suppresses
+obvious border grid lines, crops the ink bounding box, fits both masks into the
+same square canvas, and writes a PNG where the exemplar is blue, the user glyph
+is red, and overlap appears dark.
 """
 
 from __future__ import annotations
@@ -40,13 +41,44 @@ def otsu_threshold(gray: np.ndarray) -> int:
     return best_t
 
 
-def load_mask(path: Path) -> Image.Image:
+def suppress_border_grid_lines(mask: np.ndarray) -> np.ndarray:
+    cleaned = mask.copy()
+    h, w = cleaned.shape
+    edge_h = max(4, int(round(h * 0.14)))
+    edge_w = max(4, int(round(w * 0.14)))
+    row_coverage = cleaned.mean(axis=1)
+    col_coverage = cleaned.mean(axis=0)
+
+    rows = [
+        idx
+        for idx, coverage in enumerate(row_coverage)
+        if coverage > 0.32 and (idx < edge_h or idx >= h - edge_h)
+    ]
+    cols = [
+        idx
+        for idx, coverage in enumerate(col_coverage)
+        if coverage > 0.32 and (idx < edge_w or idx >= w - edge_w)
+    ]
+    for row in rows:
+        y0 = max(0, row - 1)
+        y1 = min(h, row + 2)
+        cleaned[y0:y1, :] = False
+    for col in cols:
+        x0 = max(0, col - 1)
+        x1 = min(w, col + 2)
+        cleaned[:, x0:x1] = False
+    return cleaned
+
+
+def load_mask(path: Path, suppress_grid: bool = True) -> Image.Image:
     img = Image.open(path).convert("L")
     img = ImageOps.autocontrast(img)
     arr = np.array(img)
     threshold = otsu_threshold(arr)
     # Ink is usually darker than paper.
     mask = arr <= threshold
+    if suppress_grid:
+        mask = suppress_border_grid_lines(mask)
     coords = np.argwhere(mask)
     if coords.size == 0:
         raise ValueError(f"No ink detected in {path}")
@@ -75,9 +107,9 @@ def fit_to_canvas(mask: Image.Image, size: int, margin: int) -> np.ndarray:
     return np.array(canvas) > 127
 
 
-def make_overlay(exemplar: Path, user: Path, out: Path, size: int) -> None:
-    exemplar_mask = fit_to_canvas(load_mask(exemplar), size=size, margin=size // 12)
-    user_mask = fit_to_canvas(load_mask(user), size=size, margin=size // 12)
+def make_overlay(exemplar: Path, user: Path, out: Path, size: int, suppress_grid: bool = True) -> None:
+    exemplar_mask = fit_to_canvas(load_mask(exemplar, suppress_grid=suppress_grid), size=size, margin=size // 12)
+    user_mask = fit_to_canvas(load_mask(user, suppress_grid=suppress_grid), size=size, margin=size // 12)
 
     rgb = np.full((size, size, 3), 255, dtype=np.uint8)
     # Exemplar only: blue.
@@ -97,8 +129,9 @@ def main() -> None:
     parser.add_argument("user", type=Path)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--size", type=int, default=512)
+    parser.add_argument("--keep-grid-lines", action="store_true")
     args = parser.parse_args()
-    make_overlay(args.exemplar, args.user, args.out, args.size)
+    make_overlay(args.exemplar, args.user, args.out, args.size, suppress_grid=not args.keep_grid_lines)
 
 
 if __name__ == "__main__":

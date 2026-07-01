@@ -92,6 +92,23 @@
         "type": "string"
       }
     },
+    "visual_evidence": {
+      "type": "object",
+      "properties": {
+        "exemplar_crop": {
+          "type": ["string", "null"]
+        },
+        "user_crop": {
+          "type": "string"
+        },
+        "overlay": {
+          "type": ["string", "null"]
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
     "stroke_segments": {
       "type": "array",
       "items": {

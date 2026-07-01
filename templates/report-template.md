@@ -124,9 +124,14 @@ What to fix first:
 
 ## Per-Character Notes
 
-| Crop/Page Location | Character | Quality Class | Score | Strengths | Issues | Advice | Evidence | Confidence |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  |  |  |  |  |
+For copybook pages with exemplars, each row must show three visual artifacts:
+the original exemplar crop, the original user-written crop, and the
+exemplar/user overlay. For pages without exemplars, use the user crop plus the
+best available virtual-grid, size, or cohort evidence.
+
+| Crop/Page Location | Character | Quality Class | Score | Strengths | Issues | Advice | Exemplar | User Writing | Overlay | Confidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  |  |  |  |  |  |  |  |  |  |  |
 
 ## Next Practice Plan
 

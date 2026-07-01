@@ -97,7 +97,17 @@ Use this loop for substantive diagnosis:
    - Typical strengths, as a list.
    - Typical issues, as a list.
    - Concrete correction advice.
-   - Evidence image path.
+   - Evidence image paths.
+   - When an exemplar exists, the per-glyph report must show three visuals for
+     that glyph: the original exemplar crop, the original user-written crop, and
+     an exemplar/user overlay. The overlay supplements the original crops; it
+     does not replace them.
+   - In overlays, suppress obvious border/grid-line artifacts when possible so
+     the structure comparison focuses on the glyph ink. Preserve the unmodified
+     original crops beside the overlay for placement and grid context.
+   - When no exemplar exists, show the user crop and any available virtual-grid,
+     size, or cohort evidence, and clearly mark that the three-way comparison is
+     unavailable.
 
 6. Cross-character aggregation
    Cluster repeated issues by:
@@ -180,6 +190,10 @@ This skill includes lightweight scripts that work with Pillow and NumPy:
   resizing, draw a low-opacity overlay, and write size-consistency metrics.
 - `scripts/segment_blank_glyphs.py`: split blank-paper handwriting into
   individual glyph crops using ink detection and connected components.
+- `scripts/segment_blank_by_rows.py`: split isolated blank-paper practice by
+  detecting writing rows first, then cutting glyphs within each row by
+  horizontal projection. Use this before `segment_blank_glyphs.py` when a blank
+  page contains repeated-character drills arranged in loose rows.
 - `scripts/compare_stroke_segments.py`: compare a named stroke across multiple
   glyphs using manually or visually identified stroke segments, then output
   angle/length metrics and an annotated comparison panel.
@@ -216,6 +230,10 @@ include:
 
 For long pages, include a table of per-character results and then summarize the
 common patterns. The user should be able to practice immediately after reading.
+
+When exemplars are available, the per-character table must include side-by-side
+visual evidence columns for `exemplar`, `user`, and `overlay` so the reader can
+compare each critique without opening a separate artifact.
 
 ## Report Outputs
 
@@ -268,6 +286,22 @@ Do not produce final analysis until the corrected contact sheet has been checked
 For isolated free-practice characters on blank paper, prioritize character-size
 consistency before analyzing row spacing or group spacing. Continuous-writing
 spacing can be a separate module later.
+
+Do not start blank-paper segmentation by trusting OCR word boxes. OCR may help
+find rough text rows or confirm expected row content, but handwriting OCR often
+misreads Chinese glyphs as Latin fragments or merges several glyphs into one
+word box. The preferred order for repeated-character drill pages is:
+
+1. Detect ink, preferring color-specific ink masks when the pen color is clear.
+2. Detect writing rows by vertical projection.
+3. Split each row into glyph boxes by horizontal projection, using a bridge
+   wide enough to connect disconnected strokes inside one character but narrow
+   enough not to merge neighboring characters.
+4. If the row pattern is visually clear or known from the copybook, apply
+   row-pattern labels after segmentation; do not let labels create boxes.
+5. Generate both a full-page debug overlay and a glyph contact sheet.
+6. Visually verify that each crop contains one complete glyph before size or
+   structure analysis.
 
 Use size-specific evidence:
 

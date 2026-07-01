@@ -1,0 +1,61 @@
+{
+  "type": "object",
+  "required": [
+    "crop_id",
+    "page_location",
+    "character",
+    "confidence",
+    "layout",
+    "structure",
+    "stroke_quality",
+    "overall_assessment",
+    "advice"
+  ],
+  "properties": {
+    "crop_id": {
+      "type": "string"
+    },
+    "page_location": {
+      "type": "string"
+    },
+    "character": {
+      "type": "string"
+    },
+    "exemplar_crop_id": {
+      "type": ["string", "null"]
+    },
+    "score": {
+      "type": ["number", "null"],
+      "minimum": 1,
+      "maximum": 5
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"]
+    },
+    "layout": {
+      "type": "string"
+    },
+    "structure": {
+      "type": "string"
+    },
+    "stroke_quality": {
+      "type": "string"
+    },
+    "exemplar_deviation": {
+      "type": ["string", "null"]
+    },
+    "overall_assessment": {
+      "type": "string"
+    },
+    "advice": {
+      "type": "string"
+    },
+    "evidence_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

@@ -43,6 +43,7 @@ python3 scripts/make_comparison_panel.py user.png --exemplar exemplar.png --out 
 python3 scripts/annotate_image.py out/overlay.png --annotations annotations.json --out out/annotated-overlay.png
 python3 scripts/make_size_consistency_overlay.py glyphs/*.png --out out/size-overlay.png --metrics out/size-metrics.json
 python3 scripts/segment_blank_glyphs.py blank-page.jpg --out out/blank-glyphs --prefer-blue --debug out/blank-segmentation-debug.png
+python3 scripts/segment_blank_by_rows.py blank-page.jpg --out out/blank-row-glyphs --debug out/blank-row-debug.png --contact-sheet out/blank-row-contact.png --expected-rows "下下下下下下下尔尔尔尔尔;之之之之之心心心心"
 python3 scripts/compare_stroke_segments.py stroke-manifest.json --out out/stroke-comparison.png --metrics out/stroke-metrics.json
 ```
 
@@ -74,6 +75,10 @@ For isolated blank-paper practice, prioritize character size consistency first.
 Split every visible glyph first, then use centered low-opacity overlays and
 width/height/area metrics. Save row spacing, group spacing, and continuous
 layout diagnosis for continuous-writing inputs or explicit layout requests.
+For loose repeated-character drills, prefer `segment_blank_by_rows.py`: detect
+ink, detect writing rows, split each row by horizontal projection, then assign
+labels from a visible row pattern only after the boxes are correct. Do not trust
+OCR word boxes as the primary blank-paper segmentation source.
 
 Substantive outputs should include both:
 

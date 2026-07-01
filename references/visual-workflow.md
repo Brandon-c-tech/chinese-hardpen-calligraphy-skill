@@ -63,6 +63,29 @@ When no grid exists, create a virtual frame for each character:
 Do not judge page layout only from normalized glyphs. Normalization can hide size
 inconsistency and baseline drift.
 
+For repeated-character drills arranged on blank paper, prefer row-first
+segmentation:
+
+1. Detect ink with a color-specific mask when the pen color is clear, such as
+   blue ink on white paper.
+2. Find writing rows with vertical projection.
+3. Split each row with horizontal projection. Use a horizontal bridge that
+   connects disconnected strokes inside one Chinese character but still leaves
+   the larger gaps between characters open.
+4. Generate a debug image with row boxes and glyph boxes.
+5. Generate a glyph contact sheet and inspect it before using any measurements.
+
+This row-first method is usually more reliable than raw connected components:
+characters such as `心`, `小`, `六`, and `尔` contain separated dots or strokes
+that raw components split into fragments. General OCR can assist by finding
+rough text rows or confirming expected row text, but do not treat OCR word boxes
+as authoritative single-character crops. OCR often merges neighboring glyphs or
+misreads handwritten Chinese as Latin fragments.
+
+If the page follows a visible practice pattern, such as several `下` followed by
+several `尔`, labels may be assigned after segmentation from the row pattern or
+copybook order. Labels should not create or move glyph boxes.
+
 For isolated repeated-character practice on blank paper, focus on size
 consistency first:
 

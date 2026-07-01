@@ -66,13 +66,17 @@ inconsistency and baseline drift.
 For isolated repeated-character practice on blank paper, focus on size
 consistency first:
 
-- Crop or segment repeated glyph instances.
+- Segment or crop every visible glyph first.
+- Group repeated glyph instances by character when possible.
 - Keep their original scale; do not resize them for this check.
 - Center them on a common canvas and overlay them with low opacity.
 - Quantify width, height, area, and coefficient of variation.
 
 Save row spacing, group spacing, and page-flow comments for continuous writing
 or for an explicit layout-analysis request.
+
+The visual report should include the blank-paper glyph contact sheet, not just a
+whole-page screenshot.
 
 ## Overlay Comparison
 

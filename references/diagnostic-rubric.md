@@ -13,6 +13,9 @@ Use this rubric to keep judgments stable across pages.
 Scores are optional. If scoring would distract the user, use qualitative labels:
 strong, good, usable, needs work, weak.
 
+Every user-written glyph should receive a quality class. Do not only classify
+selected examples.
+
 ## Dimensions
 
 ### Layout
@@ -90,6 +93,9 @@ A glyph can differ from the exemplar but still be structurally good.
 - Interior spaces uneven.
 - Repeated attempts lack consistency.
 
+One glyph may have several issues. Record multiple issues when they are visible,
+then use issue-category aggregation to show the user recurring patterns.
+
 ## Evidence Language
 
 Prefer evidence-backed comments:
@@ -137,3 +143,14 @@ Before scoring any Tianzige/Mizige page, verify:
 - Exemplar and user cells are aligned by row and column.
 - Random samples from left, center, and right columns all contain complete glyphs.
 - A contact sheet has been visually inspected.
+
+## Batch Analysis
+
+After all glyphs are classified, create:
+
+- Best batch: strongest several glyphs, with shared strengths.
+- Worst/priority batch: weakest several glyphs, with shared fixes.
+- Issue buckets: all glyphs grouped by problem type.
+
+This helps the user see patterns across multiple characters instead of feeling
+that the critique depends on one cherry-picked example.

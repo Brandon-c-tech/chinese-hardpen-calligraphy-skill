@@ -28,10 +28,12 @@ Do not rely on one-shot multimodal judgement of a full page. Use an agentic loop
 2. Normalize the scan and extract candidate character crops.
 3. Pair user-written characters with exemplars when exemplars are present.
 4. Create visual evidence artifacts such as crops, overlays, contact sheets, and annotated comparison images.
-5. Inspect a representative sample visually, then expand to all characters.
-6. Score and explain each character using a stable rubric.
-7. Aggregate recurring issues across characters, radicals, structures, and layout.
-8. Produce a concise diagnosis and a next-practice prescription.
+5. Verify segmentation visually before judging.
+6. Score and explain every user-written glyph, not only representative samples.
+7. Classify every glyph by quality and issue type.
+8. Aggregate recurring issues across characters, radicals, structures, and layout.
+9. Produce archival Markdown and visual HTML reports with evidence.
+10. Produce a concise next-practice prescription.
 
 ## When Starting
 
@@ -58,7 +60,7 @@ Use this loop for substantive diagnosis:
 2. Segmentation
    - Extract individual glyph crops.
    - For grid pages, prefer grid-based crops.
-   - For blank paper, use connected components and visual review.
+   - For blank paper, segment or manually crop every visible glyph before judging.
    - Verify segmentation visually before trusting measurements.
 
 3. Pairing
@@ -76,13 +78,25 @@ Use this loop for substantive diagnosis:
      for priority samples when an exemplar exists.
 
 5. Per-character diagnosis
-   Evaluate each selected character across:
+   Evaluate every user-written glyph across:
    - Overall proportion and bounding box.
    - Center of gravity and placement in the grid or virtual grid.
    - Component proportions for left-right, top-bottom, enclosing, and semi-enclosing structures.
    - Main stroke emphasis and spatial hierarchy.
    - Stroke direction, length, spacing, and terminal control.
    - Consistency across repeated attempts.
+   - Multiple issues when present. Do not reduce a glyph to only one flaw if it
+     has several clear problems.
+
+   For every glyph, record:
+   - Location / crop id.
+   - Character or probable character.
+   - Quality class: strong, good, usable, needs work, weak.
+   - Score when useful.
+   - Typical strengths, as a list.
+   - Typical issues, as a list.
+   - Concrete correction advice.
+   - Evidence image path.
 
 6. Cross-character aggregation
    Cluster repeated issues by:
@@ -91,6 +105,16 @@ Use this loop for substantive diagnosis:
    - Radicals/components: recurring weak radicals or side components.
    - Strokes: horizontal, vertical, left-falling, right-falling, hook, dot, turn.
    - Style: too loose, too cramped, too round, too stiff, weak main stroke.
+
+   Also create batch-level views:
+   - Best batch: the strongest several glyphs, analyzed together to show what
+     the user should preserve.
+   - Worst/priority batch: the weakest several glyphs, analyzed together to show
+     what to fix first.
+   - Typical strengths: representative examples are allowed, but they supplement
+     the full per-glyph table; they do not replace it.
+   - Typical errors: one character can appear in multiple error categories if it
+     has multiple problems.
 
 7. Practice prescription
    Give no more than three primary correction themes.
@@ -125,6 +149,8 @@ This skill includes lightweight scripts that work with Pillow and NumPy:
   overlays, or full-page images.
 - `scripts/make_size_consistency_overlay.py`: center repeated glyphs without
   resizing, draw a low-opacity overlay, and write size-consistency metrics.
+- `scripts/segment_blank_glyphs.py`: split blank-paper handwriting into
+  individual glyph crops using ink detection and connected components.
 
 Prefer these scripts for evidence creation. Visual-model judgement should explain
 the evidence; it should not replace the evidence.
@@ -148,13 +174,26 @@ include:
 
 - Overall diagnosis.
 - Visual comparison images showing where the writing is strong or weak.
-- Best samples and why they work.
-- Most important correction targets.
+- Per-glyph critique for every user-written glyph.
+- Classification of every glyph by quality and issue type.
+- Best batch and worst/priority batch analysis.
+- Typical strengths and typical errors, with multiple examples.
 - Recurring issues across characters.
 - Next practice plan.
 
 For long pages, include a table of per-character results and then summarize the
 common patterns. The user should be able to practice immediately after reading.
+
+## Report Outputs
+
+Create two report formats for substantial analysis:
+
+- Markdown report for archival storage, diffing, and reuse.
+- HTML report for visual review, with embedded or linked images, grouped visual
+  evidence, and scannable tables.
+
+The HTML report is the primary reading artifact. The Markdown report is the
+record copy.
 
 ## Visual Artifact Standard
 
@@ -199,7 +238,9 @@ spacing can be a separate module later.
 
 Use size-specific evidence:
 
-- Segment or crop repeated instances of the same character.
+- Segment or crop every visible glyph first. Do not analyze blank-paper practice
+  only at the page level.
+- Group repeated instances of the same character when possible.
 - Center all glyph masks on a common canvas without resizing them.
 - Overlay them with low opacity so size spread becomes visible.
 - Report simple metrics: width range, height range, area range, and coefficient

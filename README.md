@@ -42,6 +42,7 @@ python3 scripts/make_contact_sheet.py out/cells/*.png --out out/contact-sheet.pn
 python3 scripts/make_comparison_panel.py user.png --exemplar exemplar.png --out out/panel.png --good "Stable center" --issue "Right side compressed"
 python3 scripts/annotate_image.py out/overlay.png --annotations annotations.json --out out/annotated-overlay.png
 python3 scripts/make_size_consistency_overlay.py glyphs/*.png --out out/size-overlay.png --metrics out/size-metrics.json
+python3 scripts/segment_blank_glyphs.py blank-page.jpg --out out/blank-glyphs --prefer-blue --debug out/blank-segmentation-debug.png
 ```
 
 Dependencies:
@@ -69,6 +70,11 @@ be used as crop boundaries. Always verify segmentation with a debug overlay and
 contact sheet before writing the diagnosis.
 
 For isolated blank-paper practice, prioritize character size consistency first.
-Use centered low-opacity overlays and width/height/area metrics. Save row
-spacing, group spacing, and continuous layout diagnosis for continuous-writing
-inputs or explicit layout requests.
+Split every visible glyph first, then use centered low-opacity overlays and
+width/height/area metrics. Save row spacing, group spacing, and continuous
+layout diagnosis for continuous-writing inputs or explicit layout requests.
+
+Substantive outputs should include both:
+
+- Markdown for archival storage.
+- HTML for visual review.

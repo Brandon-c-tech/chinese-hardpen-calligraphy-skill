@@ -24,6 +24,8 @@ Size-consistency overlay:
 
 Size metrics:
 
+Blank-paper glyph contact sheet:
+
 ## What Is Already Working
 
 1.
@@ -68,6 +70,38 @@ Practice correction:
 
 Next-upload checkpoint:
 
+## Classification Summary
+
+| Quality Class | Glyphs / Crop IDs | Shared Pattern |
+| --- | --- | --- |
+| Strong |  |  |
+| Good |  |  |
+| Usable |  |  |
+| Needs Work |  |  |
+| Weak |  |  |
+
+## Best Batch Analysis
+
+Visual evidence:
+
+Shared strengths:
+
+What to preserve:
+
+## Worst / Priority Batch Analysis
+
+Visual evidence:
+
+Shared issues:
+
+What to fix first:
+
+## Issue Buckets
+
+| Issue Type | Glyphs / Crop IDs | Evidence | Correction |
+| --- | --- | --- | --- |
+|  |  |  |  |
+
 ## Strong Samples
 
 | Crop/Page Location | Character | Visual Evidence | Why It Works | Keep This |
@@ -82,9 +116,9 @@ Next-upload checkpoint:
 
 ## Per-Character Notes
 
-| Crop/Page Location | Character | Score | Main Structure Note | Main Stroke Note | Advice | Confidence |
-| --- | --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  |  |  |
+| Crop/Page Location | Character | Quality Class | Score | Strengths | Issues | Advice | Evidence | Confidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  |  |  |  |  |  |  |  |  |
 
 ## Next Practice Plan
 

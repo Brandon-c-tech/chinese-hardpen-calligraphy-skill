@@ -20,6 +20,10 @@ Annotated priority fix sample:
 
 Exemplar/user/overlay panel:
 
+Size-consistency overlay:
+
+Size metrics:
+
 ## What Is Already Working
 
 1.

@@ -41,6 +41,7 @@ python3 scripts/make_overlay.py exemplar.png user.png --out out/overlay.png
 python3 scripts/make_contact_sheet.py out/cells/*.png --out out/contact-sheet.png
 python3 scripts/make_comparison_panel.py user.png --exemplar exemplar.png --out out/panel.png --good "Stable center" --issue "Right side compressed"
 python3 scripts/annotate_image.py out/overlay.png --annotations annotations.json --out out/annotated-overlay.png
+python3 scripts/make_size_consistency_overlay.py glyphs/*.png --out out/size-overlay.png --metrics out/size-metrics.json
 ```
 
 Dependencies:
@@ -60,3 +61,14 @@ explicitly asks for that.
 Substantive reports should not be text-only. The skill should produce marked-up
 visual evidence: green callouts for what to keep, red callouts for what to fix,
 and side-by-side exemplar/user/overlay panels when an exemplar exists.
+
+## Tianzige And Blank Paper Notes
+
+Tianzige recognition is a mandatory gate. Internal center guide lines must not
+be used as crop boundaries. Always verify segmentation with a debug overlay and
+contact sheet before writing the diagnosis.
+
+For isolated blank-paper practice, prioritize character size consistency first.
+Use centered low-opacity overlays and width/height/area metrics. Save row
+spacing, group spacing, and continuous layout diagnosis for continuous-writing
+inputs or explicit layout requests.

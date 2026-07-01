@@ -39,6 +39,19 @@ For Tianzige or Mizige, grid lines can interfere with ink extraction. Keep both:
 - Raw crop: for placement and grid relationship.
 - Ink-emphasized crop: for stroke/structure review.
 
+Tianzige/Mizige pages require explicit boundary validation:
+
+- Real cell boundaries form the crop edges.
+- Internal guide lines are often dashed or lighter and usually cross the center
+  of the character; they are not crop edges.
+- If the detector finds internal axes, infer boundaries from midpoints between
+  adjacent axes and extrapolate the outer boundaries.
+- Draw a debug image with boundaries and axes in different colors.
+- Build a contact sheet and visually check it before analysis.
+
+Stop and redo segmentation if any crop cuts a stroke, includes a neighboring
+character, or shifts the exemplar/user pairing.
+
 ## Blank Paper
 
 When no grid exists, create a virtual frame for each character:
@@ -49,6 +62,17 @@ When no grid exists, create a virtual frame for each character:
 
 Do not judge page layout only from normalized glyphs. Normalization can hide size
 inconsistency and baseline drift.
+
+For isolated repeated-character practice on blank paper, focus on size
+consistency first:
+
+- Crop or segment repeated glyph instances.
+- Keep their original scale; do not resize them for this check.
+- Center them on a common canvas and overlay them with low opacity.
+- Quantify width, height, area, and coefficient of variation.
+
+Save row spacing, group spacing, and page-flow comments for continuous writing
+or for an explicit layout-analysis request.
 
 ## Overlay Comparison
 

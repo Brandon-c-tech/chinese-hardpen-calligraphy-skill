@@ -123,6 +123,8 @@ This skill includes lightweight scripts that work with Pillow and NumPy:
   panel with brief visual labels.
 - `scripts/annotate_image.py`: draw boxes, circles, arrows, and labels on crops,
   overlays, or full-page images.
+- `scripts/make_size_consistency_overlay.py`: center repeated glyphs without
+  resizing, draw a low-opacity overlay, and write size-consistency metrics.
 
 Prefer these scripts for evidence creation. Visual-model judgement should explain
 the evidence; it should not replace the evidence.
@@ -168,6 +170,44 @@ For each major report, create or include:
 Do not only say "left side is too wide" or "main stroke is good." Show it with a
 marked crop, overlay, guide line, circle, box, or arrow.
 
+## Tianzige Recognition Gate
+
+Correct Tianzige/Mizige recognition is a mandatory gate before diagnosis. A
+wrong grid crop can make the entire critique misleading.
+
+Before comparing characters:
+
+- Distinguish real cell boundaries from internal guide lines. In Tianzige, the
+  central cross is often dashed or lighter and passes through the character; it
+  is not a crop boundary.
+- If the strongest detected vertical/horizontal lines cut through glyph centers,
+  treat them as internal axes and infer cell boundaries from midpoints between
+  neighboring axes.
+- Generate a debug image that draws candidate boundaries and candidate center
+  axes in different colors.
+- Generate a contact sheet from the proposed crops.
+- Visually verify that every sampled crop contains exactly one complete
+  character with margin on all sides. If any stroke is cut, redo segmentation.
+
+Do not produce final analysis until the corrected contact sheet has been checked.
+
+## Blank Paper Size Consistency
+
+For isolated free-practice characters on blank paper, prioritize character-size
+consistency before analyzing row spacing or group spacing. Continuous-writing
+spacing can be a separate module later.
+
+Use size-specific evidence:
+
+- Segment or crop repeated instances of the same character.
+- Center all glyph masks on a common canvas without resizing them.
+- Overlay them with low opacity so size spread becomes visible.
+- Report simple metrics: width range, height range, area range, and coefficient
+  of variation.
+
+Only discuss row spacing, group spacing, or page layout when the user provides
+continuous writing or explicitly asks for layout analysis.
+
 ## References
 
 Read these only as needed:
@@ -175,3 +215,5 @@ Read these only as needed:
 - `references/agentic-loop.md` for the full multi-pass workflow.
 - `references/diagnostic-rubric.md` for scoring criteria.
 - `references/visual-workflow.md` for scan/crop/overlay handling.
+- `references/tianzige-grid-recognition.md` for identifying and validating
+  Tianzige/Mizige cell boundaries.

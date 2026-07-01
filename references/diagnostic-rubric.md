@@ -26,6 +26,11 @@ Check the character in its page context:
 - Spacing between neighboring characters.
 - Tilt and page slant.
 
+For isolated blank-paper drills, size consistency is the first layout metric.
+Do not over-prioritize row spacing or group spacing unless the input is
+continuous writing. Use centered overlays and width/height/area metrics to show
+the issue visually and quantitatively.
+
 ### Structure
 
 Check the internal architecture:
@@ -119,3 +124,16 @@ Examples:
 - Use arrows to show where a stroke should extend or retract.
 
 Text explains the diagnosis; the image proves where it appears.
+
+## Grid Segmentation Reliability
+
+Grid segmentation errors outrank calligraphy judgments. If the crop is wrong,
+the diagnosis is invalid.
+
+Before scoring any Tianzige/Mizige page, verify:
+
+- Full character is visible inside each crop.
+- Internal center guides are not used as cell boundaries.
+- Exemplar and user cells are aligned by row and column.
+- Random samples from left, center, and right columns all contain complete glyphs.
+- A contact sheet has been visually inspected.

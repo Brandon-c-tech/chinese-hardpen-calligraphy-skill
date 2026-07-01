@@ -23,6 +23,15 @@ user-written glyph can be paired with the correct exemplar.
 Do not force a pair when the layout is ambiguous. Mark uncertain pairs and use
 them only for broad observations.
 
+For Tianzige or Mizige, add a segmentation gate before pairing:
+
+- Identify real cell boundaries separately from internal center guides.
+- If detected lines pass through character centers, treat them as axes, not
+  boundaries.
+- Draw a debug overlay with proposed boundaries and center axes.
+- Create a crop contact sheet and inspect it before using any crop for judgment.
+- If any crop cuts a stroke or contains two partial characters, redo the grid.
+
 ## Pass 3: Evidence Artifacts
 
 Create at least one evidence artifact before final diagnosis:
@@ -66,6 +75,13 @@ Look for patterns that appear in at least two or three glyphs:
 
 The final insights should come from this aggregation, not from a single dramatic
 bad sample.
+
+For isolated blank-paper repeated characters, first aggregate size consistency:
+
+- Center glyphs without resizing and make a low-opacity overlay.
+- Compare bounding-box width, height, and ink area.
+- Discuss row spacing and group spacing only for continuous writing or when the
+  user explicitly asks for page-layout feedback.
 
 ## Pass 6: Practice Prescription
 

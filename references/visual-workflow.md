@@ -71,6 +71,33 @@ For long pages, use contact sheets:
 - Normalized glyph sheet for structure comparison.
 - Best/worst sample sheet for final report evidence.
 
+## Annotated Visual Comparisons
+
+A final diagnosis should include marked-up images, not only text. Use:
+
+- Green marks for "keep this" regions.
+- Red marks for "fix this first" regions.
+- Blue or black marks for exemplar/reference structure.
+- Gray guide lines for center, baseline, bounding box, or component division.
+
+For exemplar pages, create a panel with:
+
+1. Exemplar crop.
+2. User crop.
+3. Overlay.
+4. Short labels naming the visible difference.
+
+For no-exemplar pages, create:
+
+1. Raw crop.
+2. Normalized crop or virtual-grid crop.
+3. Annotated crop with center/bounding-box/component marks.
+
+The visual comparison should show the specific location of the issue: a left
+component that is too wide, a weak main stroke, an upward-drifting center, a
+cramped interior, or a tilted vertical. Do not let the final artifact be only a
+contact sheet plus written comments.
+
 ## Confidence
 
 Mark low confidence when:

@@ -10,6 +10,16 @@ Highest-leverage next correction:
 
 Confidence:
 
+## Visual Evidence
+
+Contact sheet:
+
+Annotated good sample:
+
+Annotated priority fix sample:
+
+Exemplar/user/overlay panel:
+
 ## What Is Already Working
 
 1.
@@ -56,15 +66,15 @@ Next-upload checkpoint:
 
 ## Strong Samples
 
-| Crop/Page Location | Character | Why It Works | Keep This |
-| --- | --- | --- | --- |
-|  |  |  |  |
+| Crop/Page Location | Character | Visual Evidence | Why It Works | Keep This |
+| --- | --- | --- | --- | --- |
+|  |  |  |  |  |
 
 ## Priority Fix Samples
 
-| Crop/Page Location | Character | Main Problem | How To Fix |
-| --- | --- | --- | --- |
-|  |  |  |  |
+| Crop/Page Location | Character | Visual Evidence | Main Problem | How To Fix |
+| --- | --- | --- | --- | --- |
+|  |  |  |  |  |
 
 ## Per-Character Notes
 

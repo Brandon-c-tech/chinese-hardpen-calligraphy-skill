@@ -1,0 +1,27 @@
+[
+  {
+    "kind": "line",
+    "points": [[256, 32], [256, 480]],
+    "color": "gray",
+    "text": "center line"
+  },
+  {
+    "kind": "box",
+    "box": [300, 140, 440, 310],
+    "color": "red",
+    "text": "compressed component"
+  },
+  {
+    "kind": "line",
+    "points": [[90, 250], [420, 250]],
+    "color": "green",
+    "text": "stable main stroke"
+  },
+  {
+    "kind": "arrow",
+    "start": [380, 390],
+    "end": [430, 430],
+    "color": "red",
+    "text": "extend stroke"
+  }
+]

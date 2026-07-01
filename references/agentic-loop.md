@@ -31,6 +31,8 @@ Create at least one evidence artifact before final diagnosis:
 - Exemplar/user overlay.
 - Normalized glyph sheet.
 - Annotated page screenshot with boxes or notes.
+- Side-by-side comparison panel showing exemplar, user glyph, and overlay.
+- Red/green marked crop showing exact strong and weak regions.
 
 For repeated-character practice, create a sequence sheet so consistency is easy
 to inspect.
@@ -49,6 +51,8 @@ For each inspected glyph, record:
 - Confidence.
 
 Use short, concrete language. Avoid vague comments such as "write more neatly."
+When the glyph is selected as a strong or weak sample, create a visual annotation
+that marks the exact region being praised or corrected.
 
 ## Pass 5: Cross-Glyph Aggregation
 
@@ -78,7 +82,16 @@ For each issue, provide a drill:
 - What visual checkpoint to use.
 - Which characters from the current page should be retried.
 
-## Pass 7: Iteration
+## Pass 7: Visual Explanation Check
+
+Before finalizing, ask:
+
+- Does every major claim have a visible example?
+- Did I show at least one good region and one weak region?
+- Did I use overlay or guide marks when the problem is spatial?
+- Can the user understand the correction from the image before reading the text?
+
+## Pass 8: Iteration
 
 If the user uploads another page, compare against the previous report:
 

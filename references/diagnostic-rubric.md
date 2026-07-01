@@ -100,3 +100,22 @@ Avoid vague comments:
 - "Needs practice."
 - "Not like the model."
 - "Wrong stroke order."
+
+## Visual Evidence Rules
+
+For important praise or criticism, pair the sentence with a marked image:
+
+- Green: stable, balanced, or worth keeping.
+- Red: priority correction.
+- Blue: exemplar/reference structure.
+- Gray: guide lines such as center line, baseline, or component boundary.
+
+Examples:
+
+- Use a vertical guide line to show center-of-gravity drift.
+- Use a red box around a compressed component.
+- Use a green line over a stable main horizontal stroke.
+- Use circles to show cramped or uneven interior spaces.
+- Use arrows to show where a stroke should extend or retract.
+
+Text explains the diagnosis; the image proves where it appears.

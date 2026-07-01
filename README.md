@@ -24,7 +24,7 @@ quality, then aggregates recurring issues into a concrete practice plan.
 1. Classify the input page.
 2. Segment or crop individual characters.
 3. Pair each user glyph with its exemplar, if present.
-4. Generate overlays and contact sheets.
+4. Generate overlays, contact sheets, and annotated comparison panels.
 5. Visually verify crops and pairings.
 6. Diagnose each character.
 7. Aggregate recurring structure, stroke, and layout problems.
@@ -39,6 +39,8 @@ artifacts for the agent to inspect.
 python3 scripts/crop_grid.py input.png --rows 10 --cols 8 --out out/cells
 python3 scripts/make_overlay.py exemplar.png user.png --out out/overlay.png
 python3 scripts/make_contact_sheet.py out/cells/*.png --out out/contact-sheet.png
+python3 scripts/make_comparison_panel.py user.png --exemplar exemplar.png --out out/panel.png --good "Stable center" --issue "Right side compressed"
+python3 scripts/annotate_image.py out/overlay.png --annotations annotations.json --out out/annotated-overlay.png
 ```
 
 Dependencies:
@@ -52,3 +54,9 @@ python3 -m pip install pillow numpy
 The skill is built to work locally. Do not upload private handwriting scans,
 student work, or generated crop artifacts to external services unless the user
 explicitly asks for that.
+
+## Visual Feedback Requirement
+
+Substantive reports should not be text-only. The skill should produce marked-up
+visual evidence: green callouts for what to keep, red callouts for what to fix,
+and side-by-side exemplar/user/overlay panels when an exemplar exists.

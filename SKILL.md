@@ -27,7 +27,7 @@ Do not rely on one-shot multimodal judgement of a full page. Use an agentic loop
 1. Classify the input page type.
 2. Normalize the scan and extract candidate character crops.
 3. Pair user-written characters with exemplars when exemplars are present.
-4. Create visual evidence artifacts such as crops, overlays, and contact sheets.
+4. Create visual evidence artifacts such as crops, overlays, contact sheets, and annotated comparison images.
 5. Inspect a representative sample visually, then expand to all characters.
 6. Score and explain each character using a stable rubric.
 7. Aggregate recurring issues across characters, radicals, structures, and layout.
@@ -70,6 +70,10 @@ Use this loop for substantive diagnosis:
    - Normalize each glyph into a common square canvas.
    - Generate exemplar/user overlays when possible.
    - Keep raw crops available because normalization can hide layout problems.
+   - Produce marked-up visual comparisons for key examples. Use green callouts
+     for parts to keep and red callouts for parts to fix.
+   - Include side-by-side panels showing exemplar, user writing, and overlay
+     for priority samples when an exemplar exists.
 
 5. Per-character diagnosis
    Evaluate each selected character across:
@@ -96,6 +100,16 @@ Use this loop for substantive diagnosis:
    - A concrete drill.
    - What the next upload should be checked for.
 
+8. Visual explanation
+   - The diagnosis must not be text-only when image inputs are available.
+   - Provide annotated image evidence for at least the strongest sample and the
+     highest-priority correction sample.
+   - Mark exact regions: center-of-gravity drift, component width imbalance,
+     weak main stroke, cramped interior space, tilt, over/under-extension, or
+     placement in the grid.
+   - Reference the visual artifacts in the report so the user can see the cause
+     of the judgment without relying on prose alone.
+
 ## Use Local Helpers When Useful
 
 This skill includes lightweight scripts that work with Pillow and NumPy:
@@ -105,6 +119,10 @@ This skill includes lightweight scripts that work with Pillow and NumPy:
 - `scripts/make_overlay.py`: normalize an exemplar glyph and a user glyph,
   then create an overlay image for structure comparison.
 - `scripts/make_contact_sheet.py`: combine glyph crops into a review sheet.
+- `scripts/make_comparison_panel.py`: create a side-by-side exemplar/user/overlay
+  panel with brief visual labels.
+- `scripts/annotate_image.py`: draw boxes, circles, arrows, and labels on crops,
+  overlays, or full-page images.
 
 Prefer these scripts for evidence creation. Visual-model judgement should explain
 the evidence; it should not replace the evidence.
@@ -127,6 +145,7 @@ Use `templates/report-template.md` for full reports. A short report should still
 include:
 
 - Overall diagnosis.
+- Visual comparison images showing where the writing is strong or weak.
 - Best samples and why they work.
 - Most important correction targets.
 - Recurring issues across characters.
@@ -134,6 +153,20 @@ include:
 
 For long pages, include a table of per-character results and then summarize the
 common patterns. The user should be able to practice immediately after reading.
+
+## Visual Artifact Standard
+
+For each major report, create or include:
+
+- A crop/contact sheet to show what was inspected.
+- At least one green-annotated "good sample" image that shows the specific
+  stable structure or stroke relationship.
+- At least one red-annotated "fix first" image that shows the exact imbalance
+  or stroke problem.
+- If exemplars exist, at least one exemplar/user/overlay panel.
+
+Do not only say "left side is too wide" or "main stroke is good." Show it with a
+marked crop, overlay, guide line, circle, box, or arrow.
 
 ## References
 

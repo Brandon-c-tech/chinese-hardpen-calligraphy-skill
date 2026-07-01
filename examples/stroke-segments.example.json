@@ -1,6 +1,12 @@
 {
   "stroke_name": "下 top horizontal",
   "stroke_type": "horizontal",
+  "exemplar": {
+    "id": "xia_exemplar",
+    "character": "下",
+    "image": "glyphs/xia_exemplar.png",
+    "points": [[42, 78], [128, 66]]
+  },
   "items": [
     {
       "id": "xia_user_01",

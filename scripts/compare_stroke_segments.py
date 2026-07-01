@@ -6,6 +6,12 @@ Input manifest example:
 {
   "stroke_name": "下 top horizontal",
   "stroke_type": "horizontal",
+  "exemplar": {
+    "id": "xia_exemplar",
+    "character": "下",
+    "image": "crops/xia/exemplar.png",
+    "points": [[42, 78], [128, 66]]
+  },
   "items": [
     {
       "id": "xia_user_01",
@@ -18,7 +24,9 @@ Input manifest example:
 
 Coordinates are pixel coordinates inside each image. The script measures segment
 length, normalized length, angle, start/end position, and spread across the
-cohort. It compares visible final stroke traces, not stroke order.
+cohort. When an exemplar is provided, the script also reports each user sample's
+deviation from the exemplar. It compares visible final stroke traces, not stroke
+order.
 """
 
 from __future__ import annotations
@@ -31,6 +39,24 @@ from typing import Any
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageOps
+
+
+def load_font(size: int = 12) -> ImageFont.ImageFont:
+    candidates = [
+        "/System/Library/Fonts/STHeiti Light.ttc",
+        "/System/Library/Fonts/STHeiti Medium.ttc",
+        "/System/Library/Fonts/PingFang.ttc",
+        "/Library/Fonts/Arial Unicode.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    ]
+    for candidate in candidates:
+        path = Path(candidate)
+        if path.exists():
+            try:
+                return ImageFont.truetype(str(path), size=size)
+            except OSError:
+                continue
+    return ImageFont.load_default()
 
 
 def as_points(item: dict[str, Any]) -> list[tuple[float, float]]:
@@ -62,7 +88,7 @@ def summary(values: list[float]) -> dict[str, float]:
     arr = np.array(values, dtype=np.float64)
     mean = float(arr.mean()) if len(arr) else 0.0
     std = float(arr.std(ddof=0)) if len(arr) else 0.0
-    cv = float(std / mean) if mean else 0.0
+    cv = float(std / abs(mean)) if mean else 0.0
     return {
         "min": float(arr.min()) if len(arr) else 0.0,
         "median": float(np.median(arr)) if len(arr) else 0.0,
@@ -102,13 +128,18 @@ def draw_crop_panel(
     scaled_points = [
         (int(round(x_offset + x * scale)), int(round(y_offset + y * scale))) for x, y in points
     ]
+    is_exemplar = str(item.get("role", "")).lower() == "exemplar"
+    stroke_color = (28, 132, 80) if is_exemplar else (224, 74, 74)
+    endpoint_color = (35, 94, 168) if is_exemplar else (46, 148, 88)
     if len(scaled_points) >= 2:
-        draw.line(scaled_points, fill=(224, 74, 74), width=4)
+        draw.line(scaled_points, fill=stroke_color, width=4)
         r = 4
         for x, y in [scaled_points[0], scaled_points[-1]]:
-            draw.ellipse([x - r, y - r, x + r, y + r], fill=(46, 148, 88))
+            draw.ellipse([x - r, y - r, x + r, y + r], fill=endpoint_color)
 
     label = str(item.get("id") or Path(image_path).stem)
+    if is_exemplar:
+        label = f"STD {label}"
     angle = item["_metrics"]["angle_degrees"]
     length = item["_metrics"]["length_px"]
     draw.rectangle([0, size - 34, size, size], fill=(250, 251, 252))
@@ -127,6 +158,7 @@ def draw_bar_chart(
     title: str,
     color: tuple[int, int, int],
     font: ImageFont.ImageFont,
+    reference_value: float | None = None,
 ) -> None:
     x0, y0 = origin
     w, h = size
@@ -135,8 +167,11 @@ def draw_bar_chart(
     plot_h = h - 30
     if not values:
         return
-    min_v = min(values)
-    max_v = max(values)
+    domain_values = list(values)
+    if reference_value is not None:
+        domain_values.append(reference_value)
+    min_v = min(domain_values)
+    max_v = max(domain_values)
     span = max(max_v - min_v, 1e-6)
     bar_w = max(8, int((w - 20) / len(values)) - 4)
     baseline = plot_y + plot_h
@@ -145,6 +180,11 @@ def draw_bar_chart(
         bx = x0 + 10 + idx * (bar_w + 4)
         draw.rectangle([bx, baseline - bh, bx + bar_w, baseline], fill=color)
         draw.text((bx, baseline + 2), str(idx + 1), fill=(90, 90, 90), font=font)
+    if reference_value is not None:
+        rel = (reference_value - min_v) / span
+        ref_y = baseline - int(rel * (plot_h - 18)) - 4
+        draw.line([x0 + 8, ref_y, x0 + w - 8, ref_y], fill=(28, 132, 80), width=2)
+        draw.text((x0 + 12, ref_y - 13), f"STD {reference_value:.2f}", fill=(28, 132, 80), font=font)
     draw.line([x0 + 6, baseline, x0 + w - 6, baseline], fill=(180, 180, 180))
     draw.text((x0 + w - 112, plot_y), f"min {min_v:.1f}", fill=(90, 90, 90), font=font)
     draw.text((x0 + w - 112, plot_y + 14), f"max {max_v:.1f}", fill=(90, 90, 90), font=font)
@@ -155,12 +195,23 @@ def compare(manifest_path: Path, out: Path, metrics_out: Path, cell_size: int, c
     base_dir = manifest_path.parent
     stroke_name = str(manifest.get("stroke_name", "stroke cohort"))
     stroke_type = str(manifest.get("stroke_type", "other"))
+    exemplar = manifest.get("exemplar")
     items = manifest.get("items", [])
     if not items:
         raise ValueError("Manifest contains no items")
 
     records = []
+    input_items = []
+    if exemplar:
+        exemplar_item = dict(exemplar)
+        exemplar_item["role"] = "exemplar"
+        input_items.append(exemplar_item)
     for item in items:
+        user_item = dict(item)
+        user_item.setdefault("role", "user")
+        input_items.append(user_item)
+
+    for item in input_items:
         item = dict(item)
         image_path = resolve_image(base_dir, str(item["image"]))
         points = as_points(item)
@@ -174,6 +225,7 @@ def compare(manifest_path: Path, out: Path, metrics_out: Path, cell_size: int, c
         metrics = {
             "id": str(item.get("id") or image_path.stem),
             "character": str(item.get("character", "")),
+            "role": str(item.get("role", "user")),
             "image": str(image_path),
             "length_px": length,
             "length_by_width": length / w if w else 0.0,
@@ -189,13 +241,39 @@ def compare(manifest_path: Path, out: Path, metrics_out: Path, cell_size: int, c
         item["_metrics"] = metrics
         records.append(item)
 
-    lengths = [r["_metrics"]["length_px"] for r in records]
-    normalized_lengths = [r["_metrics"]["length_by_diagonal"] for r in records]
-    angles = [r["_metrics"]["angle_degrees"] for r in records]
-    start_xs = [r["_metrics"]["start_rel"][0] for r in records]
-    end_xs = [r["_metrics"]["end_rel"][0] for r in records]
+    exemplar_record = next((r for r in records if r["_metrics"]["role"] == "exemplar"), None)
+    user_records = [r for r in records if r["_metrics"]["role"] != "exemplar"]
 
-    font = ImageFont.load_default()
+    if exemplar_record:
+        exemplar_metrics = exemplar_record["_metrics"]
+        for r in user_records:
+            metrics = r["_metrics"]
+            metrics["deviation_from_exemplar"] = {
+                "angle_delta_degrees": metrics["angle_degrees"] - exemplar_metrics["angle_degrees"],
+                "abs_angle_delta_degrees": abs(metrics["angle_degrees"] - exemplar_metrics["angle_degrees"]),
+                "length_by_diagonal_delta": metrics["length_by_diagonal"] - exemplar_metrics["length_by_diagonal"],
+                "length_by_diagonal_ratio": (
+                    metrics["length_by_diagonal"] / exemplar_metrics["length_by_diagonal"]
+                    if exemplar_metrics["length_by_diagonal"]
+                    else 0.0
+                ),
+                "start_rel_delta": [
+                    metrics["start_rel"][0] - exemplar_metrics["start_rel"][0],
+                    metrics["start_rel"][1] - exemplar_metrics["start_rel"][1],
+                ],
+                "end_rel_delta": [
+                    metrics["end_rel"][0] - exemplar_metrics["end_rel"][0],
+                    metrics["end_rel"][1] - exemplar_metrics["end_rel"][1],
+                ],
+            }
+
+    lengths = [r["_metrics"]["length_px"] for r in user_records]
+    normalized_lengths = [r["_metrics"]["length_by_diagonal"] for r in user_records]
+    angles = [r["_metrics"]["angle_degrees"] for r in user_records]
+    start_xs = [r["_metrics"]["start_rel"][0] for r in user_records]
+    end_xs = [r["_metrics"]["end_rel"][0] for r in user_records]
+
+    font = load_font(12)
     rows = math.ceil(len(records) / cols)
     chart_h = 180
     title_h = 50
@@ -206,10 +284,18 @@ def compare(manifest_path: Path, out: Path, metrics_out: Path, cell_size: int, c
     draw.text((12, 10), stroke_name, fill=(30, 30, 30), font=font)
     draw.text(
         (12, 26),
-        f"type={stroke_type} | n={len(records)} | angle std={summary(angles)['std']:.1f} deg | length cv={summary(normalized_lengths)['cv']:.2f}",
+        f"type={stroke_type} | users={len(user_records)} | angle std={summary(angles)['std']:.1f} deg | length cv={summary(normalized_lengths)['cv']:.2f}",
         fill=(90, 90, 90),
         font=font,
     )
+    if exemplar_record:
+        em = exemplar_record["_metrics"]
+        draw.text(
+            (width - 250, 26),
+            f"STD angle {em['angle_degrees']:.1f} deg | norm len {em['length_by_diagonal']:.2f}",
+            fill=(28, 132, 80),
+            font=font,
+        )
 
     for idx, item in enumerate(records):
         crop_panel = draw_crop_panel(item, item["_image_path"], item["_points"], cell_size, font)
@@ -219,24 +305,68 @@ def compare(manifest_path: Path, out: Path, metrics_out: Path, cell_size: int, c
 
     chart_y = title_h + rows * cell_size + 8
     half_w = width // 2
-    draw_bar_chart(draw, (12, chart_y), (half_w - 24, chart_h - 16), [r["_metrics"]["id"] for r in records], angles, "Angle spread (deg)", (54, 109, 220), font)
-    draw_bar_chart(draw, (half_w + 12, chart_y), (half_w - 24, chart_h - 16), [r["_metrics"]["id"] for r in records], normalized_lengths, "Normalized length spread", (46, 148, 88), font)
+    reference_angle = exemplar_record["_metrics"]["angle_degrees"] if exemplar_record else None
+    reference_length = exemplar_record["_metrics"]["length_by_diagonal"] if exemplar_record else None
+    draw_bar_chart(
+        draw,
+        (12, chart_y),
+        (half_w - 24, chart_h - 16),
+        [r["_metrics"]["id"] for r in user_records],
+        angles,
+        "Angle spread (deg)",
+        (54, 109, 220),
+        font,
+        reference_angle,
+    )
+    draw_bar_chart(
+        draw,
+        (half_w + 12, chart_y),
+        (half_w - 24, chart_h - 16),
+        [r["_metrics"]["id"] for r in user_records],
+        normalized_lengths,
+        "Normalized length spread",
+        (46, 148, 88),
+        font,
+        reference_length,
+    )
 
     out.parent.mkdir(parents=True, exist_ok=True)
     panel.save(out)
 
+    deviation_summary = {}
+    if exemplar_record:
+        angle_deltas = [r["_metrics"]["deviation_from_exemplar"]["angle_delta_degrees"] for r in user_records]
+        abs_angle_deltas = [
+            r["_metrics"]["deviation_from_exemplar"]["abs_angle_delta_degrees"] for r in user_records
+        ]
+        length_deltas = [
+            r["_metrics"]["deviation_from_exemplar"]["length_by_diagonal_delta"] for r in user_records
+        ]
+        length_ratios = [
+            r["_metrics"]["deviation_from_exemplar"]["length_by_diagonal_ratio"] for r in user_records
+        ]
+        deviation_summary = {
+            "angle_delta_degrees": summary(angle_deltas),
+            "abs_angle_delta_degrees": summary(abs_angle_deltas),
+            "length_by_diagonal_delta": summary(length_deltas),
+            "length_by_diagonal_ratio": summary(length_ratios),
+        }
+
     metrics = {
         "stroke_name": stroke_name,
         "stroke_type": stroke_type,
-        "count": len(records),
+        "count": len(user_records),
+        "exemplar": exemplar_record["_metrics"] if exemplar_record else None,
         "length_px": summary(lengths),
         "length_by_diagonal": summary(normalized_lengths),
         "angle_degrees": summary(angles),
         "start_x_rel": summary(start_xs),
         "end_x_rel": summary(end_xs),
-        "items": [r["_metrics"] for r in records],
+        "deviation_from_exemplar": deviation_summary,
+        "items": [r["_metrics"] for r in user_records],
         "notes": [
             "Angles use image coordinates with y inverted: positive means rising to the right.",
+            "When an exemplar is present, STD marks the exemplar's visible stroke segment.",
             "This compares visible final stroke traces, not stroke order.",
         ],
     }

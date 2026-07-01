@@ -126,12 +126,21 @@ Use this loop for substantive diagnosis:
      vertical support, left-falling, right-falling, dot, hook, or turn.
 
    Measure and visualize:
+   - Exemplar/reference parameters when an exemplar is available: measure the
+     same visible stroke in the printed model character and treat it as the
+     standard anchor for that cohort.
    - Stroke length, preferably normalized by cell or glyph size.
    - Stroke angle relative to the writing baseline.
    - Start and end position inside the cell or virtual cell.
    - Spread across attempts: range, standard deviation, coefficient of variation.
+   - Deviation from exemplar: angle delta, normalized-length delta or ratio,
+     start-position delta, and end-position delta.
    - Outliers: strokes that are much too long, too short, too flat, too steep,
      or misplaced.
+
+   The visual cohort panel should show the exemplar/reference segment alongside
+   the user samples, not only user samples. If there is no exemplar, state that
+   the comparison is user-cohort consistency only.
 
    This is a comparison of visible final stroke traces, not a claim about
    actual stroke order.
